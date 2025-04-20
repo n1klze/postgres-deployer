@@ -1,0 +1,20 @@
+---
+- name: Add PostgreSQL repository (Debian)
+  block:
+    - name: Add apt key
+      apt_key:
+        url: "{{ pg_repo.debian.key_url }}"
+        state: present
+        
+    - name: Add apt repo 
+      apt_repository:
+        repo: "{{ pg_repo.debian.repo_url }}"
+        filename: postgresql
+        state: present
+        update_cache: yes
+
+- name: Install PostgreSQL packages (Debian)
+  apt:
+    name: "{{ pg_packages.debian }}"
+    state: present
+    update_cache: yes

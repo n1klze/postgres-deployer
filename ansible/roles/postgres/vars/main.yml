@@ -1,0 +1,26 @@
+---
+pg_version: 16
+
+pg_repo:
+  debian:
+    key_url: "https://www.postgresql.org/media/keys/ACCC4CF8.asc"
+    repo_url: "deb http://apt.postgresql.org/pub/repos/apt {{ ansible_distribution_release }}-pgdg main"
+  redhat:
+    baseurl: "https://download.postgresql.org/pub/repos/yum/16/redhat/rhel-{{ ansible_distribution_major_version }}-{{ ansible_architecture }}"
+    gpgkey: "https://download.postgresql.org/pub/repos/yum/keys/PGDG-RPM-GPG-KEY-RHEL"
+
+pg_packages:
+  debian:
+    - postgresql-{{ pg_version }}
+    - python3-psycopg2
+  redhat:
+    - postgresql{{ pg_version }}-server
+    - python3-psycopg2
+
+pg_config:
+  hba_file_mode: "0600"
+
+pg_users:
+  - name: student
+    password: student
+    privileges: "LOGIN"

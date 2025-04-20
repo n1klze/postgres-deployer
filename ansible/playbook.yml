@@ -1,0 +1,11 @@
+---
+- name: Install PostgreSQL on target server
+  hosts: "{{ target_server }}"
+  become: yes
+  gather_facts: yes
+
+  roles:
+    - postgres
+
+  vars:
+    other_server_ip: "{{ other_server_ip }}"

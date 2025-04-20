@@ -1,0 +1,6 @@
+---
+- name: Install and configure PostgreSQL
+  include_tasks: "{{ ansible_os_family | lower }}_install.yml"
+  when: ansible_os_family in ['Debian', 'RedHat']
+
+- import_tasks: configure.yml

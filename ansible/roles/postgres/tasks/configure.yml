@@ -1,0 +1,46 @@
+- name: Configure PostgreSQL to accept outer connections
+  lineinfile:
+    path: "{{ (ansible_os_family == 'Debian') | ternary('/etc/postgresql/' ~ pg_version ~ '/main/postgresql.conf', '/var/lib/pgsql/' ~ pg_version ~ '/data/postgresql.conf') }}"
+    regexp: '^#?listen_addresses\s*='
+    line: "listen_addresses = '*'"
+    backup: yes
+  notify: restart postgresql
+
+- name: Configure pg_hba.conf
+  template:
+    src: pg_hba.conf.j2
+    dest: "{{ (ansible_os_family == 'Debian') | ternary('/etc/postgresql/' ~ pg_version ~ '/main/pg_hba.conf', '/var/lib/pgsql/' ~ pg_version ~ '/data/pg_hba.conf') }}"
+    owner: postgres
+    group: postgres
+    mode: "{{ pg_config.hba_file_mode }}"
+  notify: restart postgresql
+
+- name: Ensure PostgreSQL service is running and enabled
+  service:
+    name: "{{ 'postgresql' if ansible_os_family == 'Debian' else 'postgresql-' ~ pg_version }}"
+    state: started
+    enabled: yes
+
+- name: Create student user
+  become: yes
+  become_user: postgres
+  postgresql_user:
+    name: "{{ item.name }}"
+    password: "{{ item.password }}"
+    role_attr_flags: "{{ item.privileges }}"
+    state: present
+  loop: "{{ pg_users }}"
+  notify: restart postgresql
+
+- name: Test PostgreSQL connection
+  become: yes
+  become_user: postgres
+  postgresql_query:
+    query: SELECT 1
+    login_user: postgres
+  register: test_result
+  changed_when: false
+
+- name: Show test result  
+  debug:
+    var: test_result

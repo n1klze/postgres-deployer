@@ -1,0 +1,18 @@
+---
+- name: Add PostgreSQL repository (RedHat)
+  yum_repository:
+    name: pgdg
+    description: PostgreSQL repository
+    baseurl: "{{ pg_repo.redhat.baseurl }}"
+    gpgcheck: yes
+    gpgkey: "{{ pg_repo.redhat.gpgkey }}"
+    state: present
+
+- name: Install PostgreSQL packages (RedHat)
+  yum:
+    name: "{{ pg_packages.redhat }}"
+    state: present
+
+- name: Initialize PostgreSQL DB (RedHat)
+  command: "/usr/pgsql-{{ pg_version }}/bin/postgresql-{{ pg_version }}-setup initdb"
+  notify: restart postgresql
