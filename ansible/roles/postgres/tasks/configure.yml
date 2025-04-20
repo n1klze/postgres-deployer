@@ -1,6 +1,6 @@
 - name: Configure PostgreSQL to accept outer connections
   lineinfile:
-    path: "{{ (ansible_os_family == 'Debian') | ternary('/etc/postgresql/' ~ pg_version ~ '/main/postgresql.conf', '/var/lib/pgsql/' ~ pg_version ~ '/data/postgresql.conf') }}"
+    path: "{{ (ansible_os_family == 'Debian') | ternary(pg_conf_dir.debian ~ 'postgresql.conf', pg_conf_dir.redhat ~ 'postgresql.conf') }}"
     regexp: '^#?listen_addresses\s*='
     line: "listen_addresses = '*'"
     backup: yes
@@ -9,7 +9,7 @@
 - name: Configure pg_hba.conf
   template:
     src: pg_hba.conf.j2
-    dest: "{{ (ansible_os_family == 'Debian') | ternary('/etc/postgresql/' ~ pg_version ~ '/main/pg_hba.conf', '/var/lib/pgsql/' ~ pg_version ~ '/data/pg_hba.conf') }}"
+    dest: "{{ (ansible_os_family == 'Debian') | ternary(pg_conf_dir.debian ~ 'pg_hba.conf', pg_conf_dir.redhat ~ 'pg_hba.conf') }}"
     owner: postgres
     group: postgres
     mode: "{{ pg_config.hba_file_mode }}"

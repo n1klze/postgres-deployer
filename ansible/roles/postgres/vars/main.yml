@@ -9,6 +9,10 @@ pg_repo:
     baseurl: "https://download.postgresql.org/pub/repos/yum/16/redhat/rhel-{{ ansible_distribution_major_version }}-{{ ansible_architecture }}"
     gpgkey: "https://download.postgresql.org/pub/repos/yum/keys/PGDG-RPM-GPG-KEY-RHEL"
 
+pg_conf_dir:
+  debian: "/etc/postgresql/{{ pg_version }}/main/"
+  redhat: "/var/lib/pgsql/{{ pg_version }}/data/"
+
 pg_packages:
   debian:
     - postgresql-{{ pg_version }}
