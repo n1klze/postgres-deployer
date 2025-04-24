@@ -6,11 +6,11 @@ DevOps test task for PostgresPro
 * Проводит оценку загруженности серверов, выбирая наименее нагруженный как целевой;
 * устанавливает PostgreSQL на целевой хост;
 * Настраивает PostgreSQL для приема внешних соединений;
-* Настраивает подключеник пользователя “student” к PostgreSql только с ip адреса второго сервера.
+* Настраивает подключение пользователя “student” к PostgreSQL только с ip адреса второго сервера.
 ## Запуск
 1. Склонируйте репозиторий:
    ```bash
-   git clone https://github.com/n1klze/quadratic_equation.git
+   git clone https://github.com/n1klze/postgres-deployer.git
    ```
 2. Запустите deploy.py:
    ```bash
@@ -28,10 +28,6 @@ DevOps test task for PostgresPro
 ```bash
 psql -h target_server_ip -U student -d postgres
 ```
-После успешной установки вы можете проверить подключение к PostgreSQL с другого сервера:
-```bash
-psql -h target_server_ip -U student -d postgres
-```
 
 ## Принятые решения
 1. **Подключение по SSH**: происходит с помощью ключа, находящегося в `~/.ssh/id_rsa`
@@ -45,7 +41,7 @@ psql -h target_server_ip -U student -d postgres
 
 4. **Настройка доступа**:
    - Изменяется `listen_addresses = '*'` в `postgresql.conf`
-   - Добавляется правило в pg_hba.conf для ограничения доступа пользователя student только со второго сервера
+   - Добавляется правило в pg_hba.conf для ограничения доступа пользователя “student” только со второго сервера
 
 5. **Проверка работы**: Выполняется простой SQL-запрос `SELECT 1`
 
